@@ -1,0 +1,20 @@
+const mongoose = require('mongoose');
+
+const roleSchema = new mongoose.Schema({
+  tenantId: { type: String, required: true },
+  roleName: { type: String, required: true },
+  permissions: [{
+    page: { type: String, required: true }, // e.g., 'students', 'trips', 'fees'
+    canView: { type: Boolean, default: false },
+    canAdd: { type: Boolean, default: false },
+    canEdit: { type: Boolean, default: false },
+    canDelete: { type: Boolean, default: false },
+    canExport: { type: Boolean, default: false },
+    canSpecial: { type: Boolean, default: false } // e.g., endTrip, approveFee
+  }]
+}, { timestamps: true });
+
+// Ensure unique role name per tenant
+roleSchema.index({ tenantId: 1, roleName: 1 }, { unique: true });
+
+module.exports = mongoose.model('Role', roleSchema);
